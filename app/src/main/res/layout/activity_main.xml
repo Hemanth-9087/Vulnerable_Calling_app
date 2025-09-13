@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:padding="16dp"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/statusText"
+        android:text="Status: Idle"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/selectedDeviceText"
+        android:text="Selected: -"
+        android:visibility="gone"
+        android:layout_marginTop="6dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/manualIpEdit"
+            android:hint="Enter peer IP (optional)"
+            android:inputType="text"
+            android:layout_weight="1"
+            android:layout_width="0dp" android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/addIpBtn"
+            android:text="Add IP"
+            android:layout_marginStart="8dp"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:text="Discovered devices:"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    <ListView
+        android:id="@+id/deviceList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:choiceMode="singleChoice" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/startCallBtn"
+            android:text="Start Call"
+            android:enabled="false"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/stopCallBtn"
+            android:text="Stop"
+            android:enabled="false"
+            android:layout_marginStart="12dp"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>
