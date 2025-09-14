@@ -1,0 +1,10 @@
+# Gradle files
+.gradle/
+build/
+
+# Local configuration
+local.properties
+
+# IDE files
+.idea/misc.xml
+.idea/codeStyles/
