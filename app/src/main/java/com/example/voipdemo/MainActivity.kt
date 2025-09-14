@@ -20,12 +20,14 @@ import java.net.InetAddress
 import java.nio.ByteBuffer
 import kotlin.math.min
 import kotlin.random.Random
+import android.content.SharedPreferences
+import androidx.appcompat.app.AlertDialog
 
 class MainActivity : AppCompatActivity() {
 
     // === Networking/RTP constants ===
     private val DISCOVERY_PORT = 50006
-    private val OBSERVER_IP = "10.106.218.109"   // <-- put your laptop IP here
+    private var OBSERVER_IP = "10.141.185.124"   // <-- put your laptop IP here
     private val MIRROR_TO_OBSERVER = true      // easy on/off switch
     private val VOICE_PORT = 50005
     private val RTP_VERSION = 2
@@ -75,6 +77,42 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initUi()
+
+        val prefs: SharedPreferences = getSharedPreferences("VoipAppPrefs", Context.MODE_PRIVATE)
+        val observerIpSet = prefs.getBoolean("observer_ip_set", false)
+
+        if (!observerIpSet) {
+            val editText = EditText(this)
+            editText.setText(OBSERVER_IP) // Pre-fill with current value
+
+            AlertDialog.Builder(this)
+                .setTitle("Set Observer IP")
+                .setMessage("Please enter the Observer IP address:")
+                .setView(editText)
+                .setPositiveButton("OK") { dialog, _ ->
+                    val newIp = editText.text.toString()
+                    if (newIp.isNotEmpty()) {
+                        OBSERVER_IP = newIp
+                        prefs.edit().putString("OBSERVER_IP", newIp).apply()
+                        prefs.edit().putBoolean("observer_ip_set", true).apply()
+                        Toast.makeText(this, "Observer IP set to $OBSERVER_IP", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Observer IP cannot be empty, using default.", Toast.LENGTH_SHORT).show()
+                    }
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    Toast.makeText(this, "Using default Observer IP: $OBSERVER_IP", Toast.LENGTH_SHORT).show()
+                    prefs.edit().putBoolean("observer_ip_set", true).apply()
+                    dialog.dismiss()
+                }
+                .setCancelable(false) // Prevent dismissing without action
+                .show()
+        } else {
+            // Load saved IP if it exists
+            OBSERVER_IP = prefs.getString("OBSERVER_IP", OBSERVER_IP) ?: OBSERVER_IP
+        }
+
         checkPermissionsAndStart()
     }
 
@@ -86,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         selectedDeviceText = findViewById(R.id.selectedDeviceText)
         manualIpEdit = findViewById(R.id.manualIpEdit)
         addIpBtn = findViewById(R.id.addIpBtn)
-
+        
         deviceListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_single_choice, ArrayList())
         deviceList.adapter = deviceListAdapter
         deviceList.choiceMode = ListView.CHOICE_MODE_SINGLE
